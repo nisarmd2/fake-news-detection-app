@@ -40,9 +40,8 @@ if st.button("Predict"):
     else:
         clean_text = preprocess_text(user_input)
         vector = tfidf.transform([clean_text])
-        prediction = model.predict(vector)
-
-        if prediction[0] == 1:
-            st.error("🟥 Fake News")
-        else:
-            st.success("🟩 Real News")
+        prob = model.predict_proba(vector)[0]
+if fake_prob > 0.4:   # lower threshold
+    st.error(f"🟥 Fake News (Confidence: {fake_prob:.2f})")
+else:
+    st.success(f"🟩 Real News (Confidence: {1-fake_prob:.2f})")
